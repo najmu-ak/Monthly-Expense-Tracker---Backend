@@ -13,11 +13,11 @@ public class ExpenseService {
     @Autowired
     private ExpenseRepository expenseRepository;
 
-    public List<Expense> getAllExpenses() {
-        return expenseRepository.findAll();
+    public List<Expense> findAllOrderByDateDesc() {
+        return expenseRepository.findAllByOrderByDateDesc();
     }
 
-    public Expense addExpense(Expense expense) {
+    public Expense save(Expense expense) {
         return expenseRepository.save(expense);
     }
 
@@ -28,17 +28,14 @@ public class ExpenseService {
     public void deleteExpense(int id) {
         expenseRepository.deleteById(id);
         expenseRepository.flush();
-        System.out.println("Expense with id " + id + " deleted successfully");
     }
 
     public void updateExpense(int id, Expense expense) {
-        if (expenseRepository.existsById(id)) {
-            expense.setId(id); // Ensure the ID is set for the update
-            expenseRepository.save(expense);
-            expenseRepository.flush();
-            System.out.println("Expense with id " + id + " updated successfully");
-        } else {
-            throw new RuntimeException("Expense not found with id: " + id);
-        }
+        Expense existing = expenseRepository.findById(id).orElseThrow(() -> new RuntimeException("Expense not found"));
+        existing.setDate(expense.getDate());
+        existing.setAmount(expense.getAmount());
+        existing.setCategory(expense.getCategory());
+        existing.setNote(expense.getNote());
+        expenseRepository.save(existing);
     }
 }

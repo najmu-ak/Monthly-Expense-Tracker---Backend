@@ -15,11 +15,10 @@ public class ExpenseController {
     @Autowired
     private ExpenseService expenseService;
 
-    @PostMapping("/add")
-    public String addExpense(@RequestBody Expense expense) {
-        expenseService.addExpense(expense);
-        return "Expense added successfully";
-    }
+@PostMapping("/add")
+public Expense addExpense(@RequestBody Expense expense) {
+    return expenseService.save(expense);  // <-- return saved expense
+}
 
     @PutMapping("/update/{id}")
     public String updateExpense(@PathVariable int id, @RequestBody Expense expense) {
@@ -29,7 +28,7 @@ public class ExpenseController {
 
     @GetMapping("/all")
     public List<Expense> getAllExpenses() {
-        return expenseService.getAllExpenses();
+        return expenseService.findAllOrderByDateDesc();
     }
 
     @GetMapping("/{id}")
