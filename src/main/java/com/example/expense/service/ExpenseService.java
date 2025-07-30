@@ -1,5 +1,6 @@
 package com.example.expense.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,4 +39,20 @@ public class ExpenseService {
         existing.setNote(expense.getNote());
         expenseRepository.save(existing);
     }
+
+public List<Expense> filterExpenses(String category, String date) {
+    boolean hasCategory = (category != null && !category.isBlank());
+    boolean hasDate = (date != null && !date.isBlank());
+
+    if (hasCategory && hasDate) {
+        return expenseRepository.findByCategoryAndDate(category, LocalDate.parse(date));
+    } else if (hasCategory) {
+        return expenseRepository.findByCategory(category);
+    } else if (hasDate) {
+        return expenseRepository.findByDate(LocalDate.parse(date));
+    } else {
+        return expenseRepository.findAll();
+    }
+}
+
 }

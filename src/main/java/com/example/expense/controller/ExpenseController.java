@@ -7,6 +7,7 @@ import com.example.expense.entity.Expense;
 import com.example.expense.service.ExpenseService;
 
 import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:3000") // Allow requests from the React frontend
 @RestController
 @RequestMapping("/api/expense")
@@ -15,10 +16,10 @@ public class ExpenseController {
     @Autowired
     private ExpenseService expenseService;
 
-@PostMapping("/add")
-public Expense addExpense(@RequestBody Expense expense) {
-    return expenseService.save(expense);  // <-- return saved expense
-}
+    @PostMapping("/add")
+    public Expense addExpense(@RequestBody Expense expense) {
+        return expenseService.save(expense); // <-- return saved expense
+    }
 
     @PutMapping("/update/{id}")
     public String updateExpense(@PathVariable int id, @RequestBody Expense expense) {
@@ -45,5 +46,11 @@ public Expense addExpense(@RequestBody Expense expense) {
     public String deleteExpense(@PathVariable int id) {
         expenseService.deleteExpense(id);
         return "Expense deleted successfully";
+    }
+
+    @GetMapping("/filter")
+    public List<Expense> filterExpenses(@RequestParam(required = false) String category,
+            @RequestParam(required = false) String date) {
+        return expenseService.filterExpenses(category, date);
     }
 }
