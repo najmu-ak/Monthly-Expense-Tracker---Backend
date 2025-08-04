@@ -14,6 +14,18 @@ public class ExpenseService {
     @Autowired
     private ExpenseRepository expenseRepository;
 
+ 
+    // Get current month expenses
+    public List<Expense> getCurrentMonthExpenses() {
+        int currentMonth = LocalDate.now().getMonthValue();
+        return expenseRepository.findByMonth(currentMonth);
+    }
+
+    // Get expenses by any month
+    public List<Expense> getExpensesByMonth(int month) {
+        return expenseRepository.findByMonth(month);
+    }
+
     public List<Expense> findAllOrderByDateDesc() {
         return expenseRepository.findAllByOrderByDateDesc();
     }
@@ -40,19 +52,17 @@ public class ExpenseService {
         expenseRepository.save(existing);
     }
 
-public List<Expense> filterExpenses(String category, String date) {
-    boolean hasCategory = (category != null && !category.isBlank());
-    boolean hasDate = (date != null && !date.isBlank());
-
-    if (hasCategory && hasDate) {
-        return expenseRepository.findByCategoryAndDate(category, LocalDate.parse(date));
-    } else if (hasCategory) {
-        return expenseRepository.findByCategory(category);
-    } else if (hasDate) {
-        return expenseRepository.findByDate(LocalDate.parse(date));
-    } else {
+    public List<Expense> filterExpenses(String category, LocalDate date, Integer month) {
+        if (month != null) {
+            return expenseRepository.findByMonth(month);
+        } else if (category != null && date != null) {
+            return expenseRepository.findByCategoryAndDate(category, date);
+        } else if (category != null) {
+            return expenseRepository.findByCategory(category);
+        } else if (date != null) {
+            return expenseRepository.findByDate(date);
+        }
         return expenseRepository.findAll();
     }
-}
 
 }

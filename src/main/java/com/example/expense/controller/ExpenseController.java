@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.expense.entity.Expense;
 import com.example.expense.service.ExpenseService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000") // Allow requests from the React frontend
@@ -18,7 +19,7 @@ public class ExpenseController {
 
     @PostMapping("/add")
     public Expense addExpense(@RequestBody Expense expense) {
-        return expenseService.save(expense); // <-- return saved expense
+        return expenseService.save(expense);
     }
 
     @PutMapping("/update/{id}")
@@ -49,8 +50,23 @@ public class ExpenseController {
     }
 
     @GetMapping("/filter")
-    public List<Expense> filterExpenses(@RequestParam(required = false) String category,
-            @RequestParam(required = false) String date) {
-        return expenseService.filterExpenses(category, date);
+    public List<Expense> filterExpenses(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) Integer month) {
+        return expenseService.filterExpenses(category, date, month);
     }
+
+    // Default - Current month
+    @GetMapping("/current-month")
+    public List<Expense> getCurrentMonthExpenses() {
+        return expenseService.getCurrentMonthExpenses();
+    }
+
+    // Filter by month
+    @GetMapping("/month/{month}")
+    public List<Expense> getExpensesByMonth(@PathVariable int month) {
+        return expenseService.getExpensesByMonth(month);
+    }
+
 }
