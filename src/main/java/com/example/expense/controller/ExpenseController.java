@@ -9,7 +9,8 @@ import com.example.expense.service.ExpenseService;
 import java.time.LocalDate;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000") // Allow requests from the React frontend
+@CrossOrigin(origins ="http://localhost:3000") // Allow requests from the React frontend
+    // "https://monthly-expense-tracker-frontend.vercel.app"
 @RestController
 @RequestMapping("/api/expense")
 public class ExpenseController {
